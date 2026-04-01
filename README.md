@@ -19,6 +19,9 @@ This repository contains notebook-based submissions for Image Processing and Pat
 - experiment_5
 	- Notebook: experiment_5.ipynb
 	- Readme: experiment_5/README.md
+- experiment_6
+	- Notebook: experiment_6.ipynb
+	- Readme: experiment_6/README.md
 
 ## Quick Links
 
@@ -27,6 +30,7 @@ This repository contains notebook-based submissions for Image Processing and Pat
 - Experiment 3 documentation: [experiment_3/README.md](experiment_3/README.md)
 - Experiment 4 documentation: [experiment_4/README.md](experiment_4/README.md)
 - Experiment 5 documentation: [experiment_5/README.md](experiment_5/README.md)
+- Experiment 6 documentation: [experiment_6/README.md](experiment_6/README.md)
 
 ## Notes
 

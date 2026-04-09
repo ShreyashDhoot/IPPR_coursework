@@ -1,0 +1,6 @@
+Loaded inference model from: /kaggle/working/deep_dense_cnn_ai_vs_real.keras
+Last Conv Layer used for Grad-CAM: conv2d_7
+<Figure size 1000x1800 with 12 Axes>
+Conv layers used for per-layer Grad-CAM: ['conv2d', 'conv2d_1', 'conv2d_2', 'conv2d_3', 'conv2d_4', 'conv2d_5', 'conv2d_6', 'conv2d_7']
+<Figure size 1600x1080 with 12 Axes>
+<Figure size 1600x1080 with 12 Axes>

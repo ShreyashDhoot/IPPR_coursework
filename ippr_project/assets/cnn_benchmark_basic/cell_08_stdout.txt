@@ -1,0 +1,1 @@
+Model saved to: /kaggle/working/deep_dense_cnn_ai_vs_real.keras

@@ -1,0 +1,14 @@
+Cell 1: outputs=7
+Cell 2: outputs=1
+Cell 3: outputs=1
+Cell 4: outputs=5
+Cell 5: outputs=5
+Cell 6: outputs=1
+Cell 7: outputs=1
+Cell 8: outputs=1
+Cell 9: outputs=1
+Cell 10: outputs=1
+Cell 11: outputs=1
+Cell 12: outputs=1
+Cell 13: outputs=1
+Cell 14: outputs=5

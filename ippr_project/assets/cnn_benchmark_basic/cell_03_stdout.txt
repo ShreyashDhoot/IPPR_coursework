@@ -1,0 +1,2 @@
+Class distribution (train): {'fake': 86393, 'real': 57988}
+Class weights: {0: 0.8356058939960413, 1: 1.244921363040629}

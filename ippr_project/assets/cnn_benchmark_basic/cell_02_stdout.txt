@@ -1,0 +1,5 @@
+Dataset loaded from: ShreyashDhoot/AI_vs_Real
+Train size: 144381
+Validation size: 18048
+Test size: 18048
+Label mapping: 0 -> fake, 1 -> real

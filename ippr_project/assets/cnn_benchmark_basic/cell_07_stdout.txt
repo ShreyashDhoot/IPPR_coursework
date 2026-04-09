@@ -1,0 +1,29 @@
+=== Test Benchmark Metrics ===
+          accuracy: 0.7168
+         precision: 0.6080
+            recall: 0.8149
+          f1_score: 0.6964
+ balanced_accuracy: 0.7333
+           roc_auc: 0.7978
+            pr_auc: 0.6690
+               mcc: 0.4580
+       specificity: 0.6517
+       sensitivity: 0.8149
+               npv: 0.8415
+               fpr: 0.3483
+               fnr: 0.1851
+
+=== Confusion Matrix ===
+[[7072 3780]
+ [1332 5864]]
+
+=== Classification Report ===
+              precision    recall  f1-score   support
+
+        fake     0.8415    0.6517    0.7345     10852
+        real     0.6080    0.8149    0.6964      7196
+
+    accuracy                         0.7168     18048
+   macro avg     0.7248    0.7333    0.7155     18048
+weighted avg     0.7484    0.7168    0.7193     18048
+

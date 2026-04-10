@@ -98,7 +98,7 @@ Input and output:
 | Block 4 | Conv(128) -> BN -> Conv(128) -> BN -> MaxPool -> Dropout(0.35) |
 | Head | GAP -> Dense(128) + BN + Dropout(0.40) -> Dense(64) + BN + Dropout(0.30) -> Dense(1, sigmoid) |
 
-![Model architecture diagram](assets/cnn_benchmark_basic/cnn_benchmark_basic-1.png)
+![Model architecture diagram](ippr_project\basic model\assets\cnn_benchmark_basic\cnn_benchmark_basic-1.png)
 
 Parameter counts:
 

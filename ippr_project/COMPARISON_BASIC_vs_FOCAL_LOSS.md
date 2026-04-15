@@ -740,6 +740,212 @@ The **Focal Loss CNN significantly outperforms the Basic CNN** on the imbalanced
 
 ---
 
+## 14. Five-Model Extension (Integrated Into Sections 1-13)
+
+This section extends the document from a 2-model comparison to a **5-model comparison** by incorporating evidence from:
+
+- `ippr_project/tandam-model/tandam_inference_three_models.ipynb` (saved outputs only; no cell execution)
+- `ippr_project/tandam-model/checkpoints_tandem/model_1_baseline_history.json`
+- `ippr_project/tandam-model/checkpoints_tandem/model_2_patch_history.json`
+- `ippr_project/tandam-model/checkpoints_tandem/model_3_contrast_history.json`
+- `ippr_project/tandam-model/checkpoints_tandem/model_3_contrast_summary.json`
+
+### 14.1 Consolidated Model Set (Now 5 Models)
+
+| Group | Model ID | Model Description | Status in Tandem Inference Notebook Snapshot |
+|---|---|---|---|
+| TensorFlow Baselines | Basic CNN | BCE + class weights | Fully evaluated (existing Sections 1-13) |
+| TensorFlow Baselines | Focal Loss CNN | Focal loss + residual + regularization | Fully evaluated (existing Sections 1-13) |
+| Tandem (PyTorch) | Model 1 | baseline | Evaluated in notebook Cell 8 |
+| Tandem (PyTorch) | Model 2 | baseline+patch | Evaluated in notebook Cell 8 |
+| Tandem (PyTorch) | Model 3 | baseline+contrast | Evaluated in notebook Cell 8 |
+
+### 14.2 Section-by-Section Update for Sections 1-13
+
+#### Section 1 Update: Dataset and Problem Context
+
+- The tandem notebook used a **streamed and sampled evaluation setup**:
+   - `Dataset source: ShreyashDhoot/Ai_vs_Real (streaming)`
+   - `Using sampled records only: total=500 | val=250 | test=250`
+   - `label_col=label | classes=2`
+- Interpretation:
+   - This is much smaller than the full split used by the two TensorFlow models.
+   - Any future tandem-vs-TensorFlow numeric comparison should be done on the same evaluation protocol.
+
+#### Section 2 Update: Architecture Comparison
+
+- Tandem models (1, 2, 3) share the CNN + handcrafted feature fusion design used in the inference notebook.
+- Architecture figure included from tandem folder:
+
+![Tandem model architecture](./tandam-model/Screenshot%202026-04-09%20235642.png)
+
+- Model-specific intent:
+   - Model 1: baseline tandem fusion.
+   - Model 2: baseline + patch branch strategy.
+   - Model 3: baseline + contrast branch strategy.
+
+#### Section 3 Update: Loss Function Comparison
+
+- Existing TensorFlow findings remain valid: focal loss improves minority-sensitive metrics relative to BCE.
+- Tandem histories show `train_precision=0.0` and `train_recall=0.0` across saved epochs for models 1, 2, and 3.
+- Interpretation:
+   - At the saved training stage, tandem checkpoints likely did not yet reach meaningful positive-class decision behavior under logged thresholding.
+   - This supports the undertraining diagnosis for models 2 and 3 (and indicates model 1 is also not yet mature in class-separation quality).
+
+#### Section 4 Update: Training Strategy Comparison
+
+From saved tandem history files:
+
+| Tandem Model | Saved Epochs | Train Acc Range | Best Val Acc in Saved History |
+|---|---:|---:|---:|
+| Model 1 (baseline) | 11 | 0.5857 to 0.6730 | 0.6960 |
+| Model 2 (baseline+patch) | 5 | 0.5706 to 0.6215 | 0.6467 |
+| Model 3 (baseline+contrast) | 3 | 0.5732 to 0.6078 | 0.6600 |
+
+- **Explicit undertraining statement required by this update:**
+   - **Model 2 is undertrained** (only 5 saved epochs, upward trend not saturated).
+   - **Model 3 is undertrained** (only 3 saved epochs, unstable early dynamics).
+
+#### Section 5 Update: Empirical Performance Metrics
+
+- Tandem metrics are available from notebook **Cell 8** output:
+
+| Tandem Model | Split | Threshold | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC | Balanced Acc | MCC | Brier |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Model 1 (baseline) | Validation | 0.5018 | 0.7760 | 0.6964 | 0.9590 | 0.8069 | 0.8308 | 0.7755 | 0.7803 | 0.5968 | 0.1877 |
+| Model 1 (baseline) | Test | 0.5018 | 0.7120 | 0.6609 | 0.8984 | 0.7616 | 0.7914 | 0.7682 | 0.7074 | 0.4508 | 0.1993 |
+| Model 2 (baseline+patch) | Validation | 0.5191 | 0.7440 | 0.6768 | 0.9098 | 0.7762 | 0.7832 | 0.7108 | 0.7479 | 0.5217 | 0.2106 |
+| Model 2 (baseline+patch) | Test | 0.5191 | 0.6640 | 0.6310 | 0.8281 | 0.7162 | 0.7383 | 0.7131 | 0.6600 | 0.3406 | 0.2194 |
+| Model 3 (baseline+contrast) | Validation | 0.4463 | 0.6920 | 0.6271 | 0.9098 | 0.7425 | 0.7398 | 0.6593 | 0.6971 | 0.4334 | 0.2117 |
+| Model 3 (baseline+contrast) | Test | 0.4463 | 0.6520 | 0.6120 | 0.8750 | 0.7203 | 0.7090 | 0.7054 | 0.6465 | 0.3307 | 0.2201 |
+
+- Test-set ranking among tandem models (by F1):
+  - Model 1: 0.7616
+  - Model 3: 0.7203
+  - Model 2: 0.7162
+
+#### Section 5A Update: Raw Numbers + % Change Across All 5 Models (Test Split)
+
+Percent values are computed as:
+
+$$\%\Delta = \frac{\text{Model Metric} - \text{Basic Metric}}{\text{Basic Metric}} \times 100$$
+
+<img src="./comparison_metrics_seaborn_heatmap.png" alt="Five-model test-metric percent change heatmap vs Basic CNN" width="1200" />
+
+Interpretation:
+- Focal Loss and Model 1 improve most metrics relative to Basic.
+- Model 1 has the strongest recall and F1 uplift among all models in this table.
+- Models 2 and 3 retain high recall but drop on precision, MCC, and overall discrimination metrics, matching the undertraining signal.
+
+#### Section 6 Update: Threshold Tuning Analysis
+
+- Tandem threshold tuning outputs are available from Cell 8:
+   - Model 1 threshold: 0.5018
+   - Model 2 threshold: 0.5191
+   - Model 3 threshold: 0.4463
+- Existing threshold conclusions for Basic vs Focal remain unchanged.
+
+#### Section 7 Update: What Works and What Doesn't (5-Model View)
+
+What works:
+- Basic CNN and Focal Loss CNN produce complete and interpretable metrics.
+- Tandem models now also produce complete val/test metrics and confusion matrices in Cell 8.
+
+What does not work (current tandem snapshot):
+- Models 2 and 3 still lag model 1 on test F1/ROC-AUC/PR-AUC, consistent with undertraining indicators from short training histories.
+- Later visualization and feature-importance cells are still not captured as saved outputs in the provided snapshot.
+
+#### Section 8 Update: Statistical Reasoning
+
+- Undertraining indicators for Model 2 and Model 3 are consistent with the history trends:
+   - Short training horizons (5 and 3 epochs).
+   - Accuracy still improving or unstable by last saved epoch.
+   - Precision/recall still at 0.0 in saved logs.
+- This pattern usually indicates the classifier is still in early representation consolidation and threshold separation is not yet reliable.
+
+#### Section 9 Update: Visual Analysis / Heatmaps
+
+- Heatmaps were attempted in notebook logic but not generated in saved output due prior failure (`NameError: loaded_models is not defined`).
+- Therefore, there are no tandem activation maps to compare against existing Basic/Focal visual analysis in this snapshot.
+
+#### Section 10 Update: Confusion Matrix Analysis
+
+- Tandem confusion matrices are now available from Cell 8 output.
+
+Model 1 (baseline):
+- Validation: Real 77/51, AI 5/117
+- Test: Real 63/59, AI 13/115
+
+Model 2 (baseline+patch):
+- Validation: Real 75/53, AI 11/111
+- Test: Real 60/62, AI 22/106
+
+Model 3 (baseline+contrast):
+- Validation: Real 62/66, AI 11/111
+- Test: Real 51/71, AI 16/112
+
+Interpretation:
+- All three tandem models favor high AI recall.
+- Model 1 provides the best Real-vs-AI balance among tandem variants in this run.
+
+#### Section 11 Update: Practical Use Cases
+
+- Production recommendation remains Focal Loss CNN for immediate deployment because it has complete, validated metrics.
+- Tandem models should be treated as experimental until checkpoint compatibility and full evaluation outputs are available.
+
+#### Section 12 Update: Key Takeaways and Updated Recommendations
+
+Updated recommendations in 5-model context:
+
+1. Keep Focal Loss CNN as current production baseline.
+2. Fix tandem checkpoint-loading mismatch first (proj_head keys issue).
+3. Continue training **Model 2** and **Model 3** before fairness-critical comparison.
+4. Re-run tandem evaluation on identical split/protocol used by Basic/Focal comparison for apples-to-apples reporting.
+
+#### Section 13 Update: Conclusion (5 Models)
+
+- The document now covers five model candidates with quantitative metrics available for all three tandem variants via notebook Cell 8 output.
+- Within tandem variants, model 1 is strongest on test metrics, while models 2 and 3 remain below model 1.
+- **Model 2 and Model 3 are explicitly assessed as undertrained** based on short epoch counts and non-converged training behavior in saved histories.
+
+### 14.3 Graphs and Outputs Generated in the Tandem Notebook Snapshot
+
+The following are the outputs that were actually generated and saved in `tandam_inference_three_models.ipynb`:
+
+1. Progress widgets:
+    - `Streaming up to 90000 examples: 0% ...`
+    - `GLCM stats: 0% ...`
+    - `Forensic stats: 0% ...`
+2. Dataset summary text:
+    - `Dataset source: ShreyashDhoot/Ai_vs_Real (streaming)`
+    - `Using sampled records only: total=500 | val=250 | test=250`
+    - `label_col=label | classes=2`
+3. Full evaluation logs for model 1, model 2, model 3 (validation/test metrics + confusion matrices).
+4. Threshold values selected per tandem model:
+   - model 1: `0.5018`
+   - model 2: `0.5191`
+   - model 3: `0.4463`
+5. Relative tandem performance pattern in this output:
+   - model 1 best, then model 3, then model 2 by test F1.
+
+### 14.4 Prediction: Will More Training Improve Model 2 and Model 3?
+
+**Prediction (requested): Yes, more training is likely to improve Model 2 and Model 3 metrics, provided checkpoint compatibility and evaluation pipeline issues are fixed first.**
+
+Reasoning:
+
+- Model 2 trend is still upward at epoch 5 (`val_acc` reached ~0.6467 with no clear plateau).
+- Model 3 has only 3 saved epochs and high early instability, which is typically too early to judge final performance.
+- Both models still show zero precision/recall in logged training history, suggesting decision boundary maturation is incomplete.
+
+Expected direction after sufficient training (not guaranteed exact values):
+
+- Precision, recall, and F1 should move from near-degenerate behavior to meaningful non-zero balance.
+- PR-AUC should improve substantially once positive-class detection starts stabilizing.
+- Model 3 (contrast) may show a delayed but potentially stronger gain curve than Model 2 if contrastive signal begins to regularize features.
+
+---
+
 ## Appendix: Detailed Metrics Reference
 
 ### Complete Test Metrics
@@ -760,7 +966,12 @@ The **Focal Loss CNN significantly outperforms the Basic CNN** on the imbalanced
 | FPR (False Positive Rate) | 0.2151 | 0.2279 |
 | FNR (False Negative Rate) | 0.4069 | 0.3158 |
 
-<img src="./comparison_metrics_matplotlib.png" alt="Basic CNN vs Focal Loss CNN metrics comparison" width="1100" />
+<img src="./comparison_metrics_seaborn_heatmap.png" alt="Five-model test-metric percent change heatmap vs Basic CNN" width="1200" />
+
+Heatmap note:
+- Positive values (green) indicate improvements over Basic CNN.
+- Negative values (red) indicate degradations relative to Basic CNN.
+- This heatmap is generated with seaborn from the raw metric table above and saved as `comparison_metrics_seaborn_heatmap.png`.
 
 ---
 

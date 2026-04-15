@@ -1,0 +1,14 @@
+{
+  "run_id": "model_3_contrast",
+  "experiment": "baseline+contrast",
+  "use_patch": false,
+  "use_contrast": true,
+  "best_val_acc": 0.6600177304964538,
+  "test_f1": 0.6554019457245264,
+  "test_pr_auc": 0.0,
+  "threshold": 0.5,
+  "cross_domain_f1": null,
+  "cross_domain_pr_auc": null,
+  "weight_path": "checkpoints_tandem\\model_3_contrast_best.pth",
+  "history_path": "checkpoints_tandem\\model_3_contrast_history.json"
+}

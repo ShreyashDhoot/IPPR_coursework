@@ -1,0 +1,25 @@
+# requirements.txt
+# Common dependencies for:
+# - tandam_train_model_1_baseline.ipynb
+# - tandam_train_model_2_patch.ipynb
+# - tandam_train_model_3_contrast.ipynb
+
+numpy>=1.24,<3.0
+pandas>=2.0,<3.0
+matplotlib>=3.7,<4.0
+seaborn>=0.13,<1.0
+
+scikit-learn>=1.3,<2.0
+scipy>=1.11,<2.0
+
+tensorflow>=2.15,<3.0
+keras>=2.15,<3.0
+
+opencv-python>=4.8,<5.0
+pillow>=10.0,<12.0
+albumentations>=1.4,<2.0
+
+tqdm>=4.66,<5.0
+jupyter>=1.0,<2.0
+notebook>=7.0,<8.0
+ipykernel>=6.0,<7.0

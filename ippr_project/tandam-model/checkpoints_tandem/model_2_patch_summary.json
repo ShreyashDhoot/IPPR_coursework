@@ -1,0 +1,14 @@
+{
+  "run_id": "model_2_patch",
+  "experiment": "baseline+patch",
+  "use_patch": true,
+  "use_contrast": false,
+  "best_val_acc": 0.8027482269503546,
+  "test_f1": 0.7756682027649769,
+  "test_pr_auc": 0.8196486392363735,
+  "threshold": 0.48768097162246704,
+  "cross_domain_f1": null,
+  "cross_domain_pr_auc": null,
+  "weight_path": "checkpoints_tandem/model_2_patch_best.pth",
+  "history_path": "checkpoints_tandem/model_2_patch_history.json"
+}
